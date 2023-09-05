@@ -77,7 +77,6 @@ import Data.Functor.Reverse
 import Control.Applicative.Backwards
 import Control.Applicative.Lift
 import Control.Monad.Trans.Except
-import Control.Monad.Trans.List
 import Control.Monad.Trans.Maybe
 import Control.Monad.Trans.RWS
 import Control.Monad.Trans.Reader
@@ -189,14 +188,6 @@ instance Unfolder f => Unfolder (Lift f)
 
 -- | Derived instance.
 instance (Functor m, Monad m, Monoid e) => Unfolder (ExceptT e m)
-
--- | Derived instance.
-instance Applicative f => Unfolder (ListT f) where
-  {-# INLINABLE chooseMap #-}
-  chooseMap f = ListT . foldr appRun (pure [])
-    where
-      appRun x ys = (++) <$> runListT (f x) <*> ys
-  chooseInt n = ListT $ pure [0 .. n - 1]
 
 -- | Derived instance.
 instance (Functor m, Monad m) => Unfolder (MaybeT m) where
